@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vacinas do Futuro</title>
+<meta name="description" content="Como as vacinas de RNA mensageiro e vetores virais ensinam o corpo a se defender.">
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #0a0a0a;
+    --surface-2: #111111;
+    --border: #232323;
+    --border-hover: #3a3a3a;
+    --text: #ffffff;
+    --muted: #a1a1aa;
+    --accent: #8b5cf6;
+    --accent-2: #22d3ee;
+    --green: #34d399;
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .container { width: min(1120px, 100% - 48px); margin-inline: auto; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(14px);
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .container {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo { font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .logo-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color .2s; }
+  nav a:hover { color: var(--text); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    padding: 140px 0 120px;
+    text-align: center;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; top: -120px; left: 50%;
+    width: 720px; height: 480px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(139,92,246,.28), transparent 65%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center top, #000 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center top, #000 0%, transparent 70%);
+    opacity: .35;
+    pointer-events: none;
+  }
+  .hero > .container { position: relative; z-index: 1; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-bottom: 28px;
+  }
+  .badge i {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 7vw, 5.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    max-width: 14ch;
+    margin: 0 auto 24px;
+  }
+  .gradient-text {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p.lead {
+    max-width: 640px; margin: 0 auto 40px;
+    color: var(--muted); font-size: 1.15rem;
+  }
+  .hero p.lead strong { color: var(--text); font-weight: 600; }
+
+  .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 0.95rem; font-weight: 600;
+    text-decoration: none;
+    transition: all .25s ease;
+  }
+  .btn-primary {
+    background: var(--text); color: #000;
+  }
+  .btn-primary:hover { box-shadow: 0 0 28px rgba(139,92,246,.55); transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid var(--border); color: var(--text); background: transparent;
+  }
+  .btn-ghost:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(139,92,246,.25); }
+
+  /* ---------- Sections ---------- */
+  section { padding: 90px 0; }
+  .eyebrow {
+    color: var(--accent); font-size: 0.8rem; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    letter-spacing: -0.03em; line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .section-sub { color: var(--muted); max-width: 560px; margin-bottom: 52px; }
+
+  /* ---------- Cards ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+  .card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    overflow: hidden;
+    transition: border-color .3s, transform .3s, box-shadow .3s;
+  }
+  .card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .card::after {
+    content: "";
+    position: absolute; top: -90px; right: -90px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, var(--card-accent, var(--accent)), transparent 70%);
+    opacity: 0; transition: opacity .4s;
+    pointer-events: none;
+  }
+  .card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,.6);
+  }
+  .card:hover::before { opacity: 1; }
+  .card:hover::after { opacity: .12; }
+
+  .card.rna { --card-accent: var(--accent); }
+  .card.vetor { --card-accent: var(--accent-2); }
+
+  .tag {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    color: var(--card-accent);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    padding: 4px 10px; border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  .card h3 { font-size: 1.5rem; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .card .analogy { color: var(--muted); margin-bottom: 26px; }
+
+  .steps { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 16px; }
+  .steps li {
+    counter-increment: step;
+    display: flex; gap: 14px; align-items: flex-start;
+    color: #d4d4d8; font-size: 0.97rem;
+  }
+  .steps li::before {
+    content: counter(step);
+    flex: 0 0 28px; height: 28px;
+    display: grid; place-items: center;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--card-accent);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    transition: all .3s;
+  }
+  .card:hover .steps li::before {
+    border-color: var(--card-accent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--card-accent) 40%, transparent);
+  }
+  .steps strong { color: var(--text); font-weight: 600; }
+
+  .note {
+    margin-top: 26px; padding: 14px 16px;
+    border-left: 2px solid var(--card-accent);
+    background: var(--surface-2);
+    border-radius: 0 10px 10px 0;
+    color: var(--muted); font-size: 0.9rem;
+  }
+  .note strong { color: var(--text); }
+
+  /* ---------- CTA ---------- */
+  .cta { padding-bottom: 110px; }
+  .cta-box {
+    position: relative;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--surface);
+    padding: 72px 32px;
+    overflow: hidden;
+  }
+  .cta-box::before {
+    content: "";
+    position: absolute; bottom: -200px; left: 50%;
+    width: 700px; height: 400px; transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(52,211,153,.22), transparent 65%);
+    pointer-events: none;
+  }
+  .cta-box > * { position: relative; }
+  .cta-box h2 {
+    font-size: clamp(1.9rem, 4.5vw, 3rem);
+    letter-spacing: -0.035em; line-height: 1.12;
+    margin-bottom: 16px;
+  }
+  .cta-box > p { color: var(--muted); max-width: 560px; margin: 0 auto 40px; }
+
+  .pills {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; text-align: left; margin-bottom: 52px;
+  }
+  .pill {
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    border-radius: 14px; padding: 22px;
+    transition: border-color .3s, transform .3s;
+  }
+  .pill:hover { border-color: var(--green); transform: translateY(-3px); }
+  .pill .icon { font-size: 1.4rem; margin-bottom: 10px; }
+  .pill h4 { font-size: 1rem; margin-bottom: 6px; }
+  .pill p { color: var(--muted); font-size: 0.9rem; }
+
+  .final-message {
+    font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+    font-weight: 700; letter-spacing: -0.03em;
+    margin-bottom: 30px;
+  }
+  .btn-green {
+    background: var(--green); color: #00150d;
+  }
+  .btn-green:hover { box-shadow: 0 0 30px rgba(52,211,153,.55); transform: translateY(-2px); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    text-align: center;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border-hover); }
+  footer a:hover { border-color: var(--accent); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .grid, .pills { grid-template-columns: 1fr; }
+    nav ul { display: none; }
+    .hero { padding: 100px 0 80px; }
+    section { padding: 64px 0; }
+    .card { padding: 28px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="logo"><span class="logo-dot"></span> Vacinas do Futuro</div>
+    <ul>
+      <li><a href="#tecnologias">Tecnologias</a></li>
+      <li><a href="#cuidado">Autocuidado</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO (Folha 1) -->
+<header class="hero">
+  <div class="container">
+    <div class="badge"><i></i> Biologia · 1ª série</div>
+    <h1>Vacinas do futuro: <span class="gradient-text">seu corpo aprende a se defender</span></h1>
+    <p class="lead">
+      Vacinas treinam o corpo para reconhecer um vírus <strong>antes</strong> de ele causar doença.
+      Duas tecnologias modernas fazem isso de um jeito inteligente: o <strong>RNA mensageiro</strong>
+      e os <strong>vetores virais</strong>. Nenhuma delas usa o vírus que causa a doença.
+    </p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#tecnologias">Entender como funciona</a>
+      <a class="btn btn-ghost" href="#cuidado">Por que vacinar?</a>
+    </div>
+  </div>
+</header>
+
+<!-- TECNOLOGIAS (Folhas 2 e 3) -->
+<section id="tecnologias">
+  <div class="container">
+    <p class="eyebrow">Tecnologias</p>
+    <h2 class="section-title">Duas formas de treinar o sistema imune</h2>
+    <p class="section-sub">Cada uma entrega ao corpo uma instrução para produzir uma peça inofensiva do vírus. É o suficiente para o sistema imune aprender.</p>
+
+    <div class="grid">
+      <!-- RNAm -->
+      <article class="card rna">
+        <span class="tag">RNAm</span>
+        <h3>RNA mensageiro: a receita para o seu corpo</h3>
+        <p class="analogy">Pense em um bilhete de receita entregue às suas células.</p>
+        <ol class="steps">
+          <li><span>A vacina leva um "bilhete de receita" (o <strong>RNA mensageiro</strong>) para as nossas células.</span></li>
+          <li><span>As células leem a receita e produzem <strong>uma pequena parte inofensiva</strong> do vírus, como uma "peça de treino".</span></li>
+          <li><span>O sistema imune reconhece essa peça e cria <strong>anticorpos</strong> e <strong>células de memória</strong>.</span></li>
+          <li><span>O RNA se desfaz rapidamente. Ele <strong>não entra no núcleo</strong> da célula e <strong>não altera o nosso DNA</strong>.</span></li>
+        </ol>
+      </article>
+
+      <!-- Vetores virais -->
+      <article class="card vetor">
+        <span class="tag">VETOR VIRAL</span>
+        <h3>Vetores virais: o entregador inofensivo</h3>
+        <p class="analogy">Pense em um caminhão de entrega seguro e sem carga perigosa.</p>
+        <ol class="steps">
+          <li><span>Usa-se um vírus comum (como um <strong>adenovírus</strong>) <strong>modificado para não causar doença e não se multiplicar</strong>.</span></li>
+          <li><span>Ele funciona como um <strong>caminhão de entrega</strong>: leva até as células a instrução para produzir uma peça do vírus-alvo.</span></li>
+          <li><span>A célula produz essa peça, o sistema imune a reconhece e <strong>aprende a se defender</strong>.</span></li>
+        </ol>
+        <div class="note"><strong>Importante:</strong> o "entregador" é só o transporte. Ele não causa a doença que a vacina previne.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA (Folha 4) -->
+<section id="cuidado" class="cta">
+  <div class="container">
+    <div class="cta-box">
+      <p class="eyebrow" style="color: var(--green);">Segurança e autocuidado</p>
+      <h2>Vacina é proteção <span style="color: var(--green);">e é direito de todos!</span></h2>
+      <p>Essas tecnologias passam por várias fases de testes antes de chegar até você.</p>
+
+      <div class="pills">
+        <div class="pill">
+          <div class="icon">✅</div>
+          <h4>São seguras</h4>
+          <p>Passam por várias fases de testes e são avaliadas por órgãos como a <strong>Anvisa</strong>. Os efeitos comuns são leves (dor no braço, cansaço) e passam rápido.</p>
+        </div>
+        <div class="pill">
+          <div class="icon">🏥</div>
+          <h4>Direito à saúde</h4>
+          <p>No Brasil, o <strong>SUS oferece vacinas gratuitas</strong> a toda a população.</p>
+        </div>
+        <div class="pill">
+          <div class="icon">💚</div>
+          <h4>Autocuidado</h4>
+          <p>Mantenha a caderneta de vacinação em dia e tire dúvidas com profissionais de saúde, em fontes confiáveis.</p>
+        </div>
+      </div>
+
+      <p class="final-message">"Vacinar-se é cuidar de você e de quem você ama!"</p>
+      <a class="btn btn-green" href="https://www.gov.br/saude/pt-br/vacinacao" target="_blank" rel="noopener">Saiba mais no Ministério da Saúde</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Trabalho escolar · 1ª série do Ensino Médio · Tema: Vacinas, Vetores Virais e RNA Mensageiro · Criado por Pedro Sampaio dos Reis ·
+    Fontes: <a href="https://www.gov.br/saude" target="_blank" rel="noopener">Ministério da Saúde</a>,
+    <a href="https://butantan.gov.br" target="_blank" rel="noopener">Butantan</a>,
+    <a href="https://portal.fiocruz.br" target="_blank" rel="noopener">Fiocruz</a>
+  </div>
+</footer>
+
+</body>
+</html>
